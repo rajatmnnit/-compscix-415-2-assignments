@@ -1,0 +1,9 @@
+# R meta file.
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Files & Directories created actomatically by OSX Filesystem.
+.DS_Store
+**/.DS_Store/
