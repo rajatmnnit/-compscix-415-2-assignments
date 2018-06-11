@@ -2,29 +2,61 @@
 title: "COMPSCIX 415.2 Homework 1"
 author: "Rajat Jain"
 date: "6/5/2018"
-output: pdf_document
+output:
+  pdf_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## My Repository
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+My Github repository for my assignments can be found at this URL: [https://github.com/rajatmnnit/compscix-415-2-assignments](https://github.com/rajatmnnit/compscix-415-2-assignments)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+## Libraries
+
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr)
+library(tidyverse)
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+## Exploring Data
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+### Load data from Package
+
+```{r data}
+data("WorldCities")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### Data Summary - Question# 1
+WorldCities data set contains `r nrow(WorldCities)` observations and `r ncol(WorldCities)` variables. Some of the variable names are: `r colnames(WorldCities)`
+
+
+### A quick glimpse at the data
+```{r datapreview}
+# Using glimpse function from dplyr
+glimpse(WorldCities)
+```
+
+
+## Extraction
+
+### Top 200 Rows
+```{r filter_worldcities}
+WorldCities <- head(WorldCities, 200) # 200 rows
+```
+
+### Countries
+```{r countries}
+country_col <- WorldCities$country
+unique(country_col)
+```
+
+### Regions - Question# 2
+```{r regions}
+unique(WorldCities$region)
+```
