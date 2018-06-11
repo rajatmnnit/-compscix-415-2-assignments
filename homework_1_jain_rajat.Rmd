@@ -60,3 +60,26 @@ unique(country_col)
 ```{r regions}
 unique(WorldCities$region)
 ```
+
+### The tidy way - Question# 3
+```{r unique_countries}
+WorldCities %>% select(country) %>% unique()
+```
+
+
+## Visualize
+
+```{r pop_dist}
+WorldCities %>% ggplot(aes(x = population)) +
+  geom_histogram()
+```
+
+### Population Distribution - Question# 4
+```{r pop_dist_titled}
+WorldCities %>% ggplot(aes(x = population)) +
+  geom_histogram() +
+  xlab("City Population") +
+  ylab("#Cities") + 
+  ggtitle("Distribution of Population in Cities") + 
+  theme_bw()
+```
