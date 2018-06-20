@@ -1,0 +1,130 @@
+---
+title: "COMPSCIX 415.2 Homework 3"
+author: "Rajat Jain"
+date: "June 19th, 2018"
+output:
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_packages, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library()
+```
+
+## Section 3.8.1 Exercises
+
+1. **What is the problem with this plot? How could you improve it?**
+```{r 3_8_1_1_q, fig.height=3.5}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point()
+```
+
+```{r 3_8_1_1, fig.height=3.5}
+```
+
+
+2. **What parameters to geom_jitter() control the amount of jittering?**
+
+```{r 3_8_1_2, fig.height=3.5}
+```
+
+
+3. **Compare and contrast geom_jitter() with geom_count().**
+
+```{r 3_8_1_3, fig.height=3.5}
+```
+
+
+4. **What’s the default position adjustment for geom_boxplot()? Create a visualisation of the mpg dataset that demonstrates it.**
+
+```{r 3_8_1_4, fig.height=3.5}
+```
+
+
+
+## Section 3.9.1 Exercises
+
+2. **What does labs() do? Read the documentation.**
+
+```{r 3_9_1_2, fig.height=3.5}
+```
+
+
+4. **What does the plot below tell you about the relationship between city and highway mpg? Why is coord_fixed() important? What does geom_abline() do?**
+```{r 3_9_1_4_q, fig.height=3.5}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() + 
+  geom_abline() +
+  coord_fixed()
+```
+
+```{r 3_9_1_2, fig.height=3.5}
+```
+
+
+
+## Section 4.4 Exercises
+
+1. **Why does this code not work?**
+```{r 4_4_1_q, eval=FALSE}
+my_variable <- 10
+my_varıable
+#> Error in eval(expr, envir, enclos): object 'my_varıable' not found```
+```
+**Look carefully! (This may seem like an exercise in pointlessness, but training your brain to notice even the tiniest difference will pay off when programming.)**
+
+```{r 4_4_1, fig.height=3.5}
+```
+
+
+2. **Tweak each of the following R commands so that they run correctly:**
+```{r 4_4_2_q, eval=FALSE}
+library(tidyverse)
+
+ggplot(dota = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+fliter(mpg, cyl = 8)
+filter(diamond, carat > 3)
+```
+
+```{r 4_4_2, fig.height=3.5}
+```
+
+
+
+## Section 5.2.4 Exercises
+
+1. **Find all flights that**
+    1. Had an arrival delay of two or more hours
+    2. Flew to Houston (IAH or HOU)
+    3. Were operated by United, American, or Delta
+    4. Departed in summer (July, August, and September)
+    5. Arrived more than two hours late, but didn’t leave late
+    6. Were delayed by at least an hour, but made up over 30 minutes in flight
+    7. Departed between midnight and 6am (inclusive)
+
+
+3. **How many flights have a missing dep_time? What other variables are missing? What might these rows represent?**
+
+4. **Why is NA ^ 0 not missing? Why is NA | TRUE not missing? Why is FALSE & NA not missing? Can you figure out the general rule? (NA * 0 is a tricky counterexample!)**
+
+
+
+## Section 5.4.1 Exercises
+
+1. **Brainstorm as many ways as possible to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay` from `flights`.**
+
+```{r 5_4_1_1, fig.height=3.5}
+```
+
+
+3. **What does the one_of() function do? Why might it be helpful in conjunction with this vector?**
+```{r 5_4_1_3_q, fig.height=3.5}
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+```
