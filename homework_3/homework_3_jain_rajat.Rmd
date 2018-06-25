@@ -29,7 +29,7 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 ```
 
 \pagebreak
-This plot has many overlapping point which do not show the areas of concentration properly. It can be inproved by adding jitter to the position adjustment.
+This plot has many overlapping point which do not show the areas of concentration properly. It can be improved by adding jitter to the position adjustment.
 ```{r 3_8_1_1, fig.height=4}
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
   geom_point(position = "jitter")
@@ -43,7 +43,7 @@ The parameters to `geom_jitter()` which control the amount of jittering are `wid
 
 3. **Compare and contrast `geom_jitter()` with `geom_count()`.**
 
-`geom_jitter` randomly moves the overlapping points slightly to avoid overlapping whereas, `geom_count` counts the overlapping points at a given point and maps them to the size of a single point. The determinism of `geom_count` makes it useful in discrete situations, but it does not work when the points are not exactly overlapping but are very close.
+`geom_jitter` randomly moves the overlapping points slightly to avoid overlapping whereas, `geom_count` counts the overlapping points at a given point and maps them to the size of a single point. This makes `geom_count` useful in discrete situations, but it does not work when the points are not exactly overlapping but are very close.
 \newline
 
 4. **What’s the default position adjustment for `geom_boxplot()`? Create a visualisation of the `mpg` dataset that demonstrates it.**
@@ -71,14 +71,14 @@ jter <- my_plot + ggtitle("Position: Jitter") +
 grid.arrange(dflt, ddge, idnt, jter, nrow = 2, ncol = 2)
 ```
 
-In the above plots position adjustment `Dodge` generated the plot looking exactly as with default position adjustment.
+In the above plots position adjustment `Dodge` generates a plot looking exactly same as the one with default position adjustment.
 \pagebreak
 
 ## Section 3.9.1 Exercises
 
 2. **What does `labs()` do? Read the documentation.**
 
-`labs()` function from `ggplot2` package is used to modify axis, legend, and plot labels.
+`labs()` function from `ggplot2` package is used to modify axis, legend, and plot labels. (Courtesy: ?labs)
 \newline
 
 4. **What does the plot below tell you about the relationship between city and highway mpg? Why is `coord_fixed()` important? What does `geom_abline()` do?**
@@ -93,7 +93,7 @@ This plot tells us that the city and highway mpg are positively correlated, mean
 
 `coord_fixed()` is important because both city and highway mpg have the same unit and hence one unit of each should be represented by the same length on the axes for the best visualization. `coord_fixed()` does exactly that for us.
 
-`geom_abline()` creates a reference line shown on the plot. Since it is called without `intercept` and `slope` arguments, it generates a default reference line passing through the origin and with a slope of 1 (45&deg;). So this line represents all the point on the plot where city mpg would be equal to highway mpg. From the plot we can also observe that all the plotted points are above this line, which means that the highway mpg is always higer than the city mpg. If we observe closely, we can also see that the scatter plot is more or less parallel to the reference line. This tells us that the highway mpg is higher than the city mpg for a constant additive offset.
+`geom_abline()` creates a reference line shown on the plot. Since it is called without `intercept` and `slope` arguments, it generates a default reference line passing through the origin and with a slope of 1 (45&deg;). So this line represents all the point on the plot where city mpg would be equal to highway mpg. From the plot we can also observe that all the plotted points are above this line, which means that the highway mpg is always higher than the city mpg. If we observe closely, we can also see that the scatter plot is more or less parallel to the reference line. This tells us that the highway mpg is higher than the city mpg by a constant additive offset.
 \newline
 
 
@@ -108,7 +108,7 @@ my_varıable
 ```
 **Look carefully! (This may seem like an exercise in pointlessness, but training your brain to notice even the tiniest difference will pay off when programming.)**
 
-This code does not work because the name of the variable while printing it is mis-spelled.
+This code does not work because the name of the variable is mis-spelled while printing it.
 ```{r 4_4_1}
 my_variable <- 10
 my_variable
