@@ -42,7 +42,7 @@ not_cancelled %>%
     )
 ```
 
-We can get the same result as `count()` by using `group_by()` with `summarise()` as hsown above.
+We can get the same result as `count()` by using `group_by()` with `summarise()` as shown above.
 \newline
 
 4. **Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?**
@@ -120,14 +120,13 @@ flights %>%
 
 1. **How can you tell if an object is a tibble? (Hint: try printing `mtcars`, which is a regular data frame).**
 
-On printing a tibble only as many columns are printed as can fit on the screen and only first 10 rows are printed whereas a regular data frame is printed completely. Alternatively, we can also tell by running `class()` function on the object as shown in the example below.
+On printing a tibble only as many columns and rows are printed as can fit on the screen whereas a regular data frame is printed completely. Alternatively, we can also tell by running `class()` function on the object as shown in the example below.
 
 ```{r 10_5_1}
 class(mtcars)
 class(mpg)
 ```
-
-&nbsp;\newline
+&nbsp;
 
 2. **Compare and contrast the following operations on a `data.frame` and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?**
 
@@ -141,6 +140,7 @@ tbl <- as_tibble(df)
 df$x
 tbl$x
 ```
+
 In this operation we are trying to extract the values from column `x` of the object which does not exist. However, in the data frame operation a value (of column `xyz`) is returned. This could cause unpredictable behaviors and frustration in a large project. The same operation on a tibble object returns `NULL` value and throws a Warning. 
 
 ```{r 10_5_2_b}
@@ -149,6 +149,7 @@ df[, "xyz"]
 tbl[, "xyz"]
 ```
 
+In this operation we are trying to extract the values from column `xyz` of the object. Since there is only one row in the data frame, it returns a vector with single factor value. If there were multiple rows, it would have returned a data frame with one column. This could cause unpredictable data types at run-time and may cause frustration when used in non-interactive mode. The same operation on a tibble object always returns a tibble.
 
 ```{r 10_5_2_c}
 # Third Operation
@@ -207,7 +208,7 @@ table4a %>%
   gather(`1999`, `2000`, key = "year", value = "cases")
 ```
 
-The code works however, by applying a work-around for this problem using backticks on the column names.
+The code above works however, by applying a work-around for this problem using backticks on the column names.
 \newline
 
 3. **Why does spreading this tibble fail? How could you add a new column to fix the problem?**
@@ -223,7 +224,7 @@ people <- tribble(
 )
 ```
 
-Spreading this tibble fails because the name "Phillip Woods" is repeated with different values of "age" on Line# 1 & 3. To fix this, we could add another column which helps in uniquely identify the two rows. For example:
+Spreading this tibble fails because the name "Phillip Woods" is repeated with different values of "age" on Line# 1 & 3. To fix this, we could add another column which helps in uniquely identifying the two rows. For example:
 
 ```{r 12_3_3_3}
 people <- tribble(
@@ -237,8 +238,7 @@ people <- tribble(
 )
 spread(people, key = key, value = value)
 ```
-
-&nbsp;\newline
+&nbsp;
 
 4. **Tidy the simple tibble below. Do you need to spread or gather it? What are the variables?**
 ```{r 12_3_3_4_q}
@@ -250,9 +250,18 @@ preg <- tribble(
 ```
 
 We need to gather it. Columns `male` and `female` will be gathered under column name `sex`.
+
 ```{r 12_3_3_4}
-gather(preg, sex, count, male, female) 
+gather(preg, sex, count, male, female) %>%
+  mutate(pregnant = (pregnant == "yes"))
 ```
+
+The variables in the output are:
+
+* *pregnant*: logical factor
+* *sex*: character factor with values - male, female
+* *count*: number containing count of instances of each type
+
 \pagebreak
 
 
@@ -272,7 +281,7 @@ tibble(x = c("a,b,c", "d,e", "f,g,i")) %>%
 * "warn" (the default): emit a warning and drop extra values
 * "drop": drop any extra values without a warning
 * "merge": only splits at most length(into) times
-(Courtesy: `?separate`)
+
 ```{r 12_4_3_1_a}
 tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
   separate(x, c("one", "two", "three"), extra = "merge")
@@ -283,7 +292,7 @@ tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>%
 * "warn" (the default): emit a warning and fill from the right
 * "right": fill with missing values on the right
 * "left": fill with missing values on the left
-(Courtesy: `?separate`)
+
 ```{r 12_4_3_1_b}
 tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
   separate(x, c("one", "two", "three"), fill = "left")
