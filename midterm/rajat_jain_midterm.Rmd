@@ -1,7 +1,7 @@
 ---
 title: "COMPSCIX 415.2 Homework 5/Midterm"
 author: "Rajat Jain"
-date: "July 9th, 2018"
+date: "July 10th, 2018"
 output:
   pdf_document:
     toc: yes
@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r load_packages, echo=FALSE, warning=FALSE, message=FALSE}
+# Load tidyverse library.
 library(tidyverse)
 ```
 
@@ -22,17 +23,22 @@ library(tidyverse)
 
 My git repository is located at this Github location: [https://github.com/rajatmnnit/compscix-415-2-assignments](https://github.com/rajatmnnit/compscix-415-2-assignments)
 
-All the assignments are organized under their individual directories containing .Rmd file and the knitted pdf version and all the required and generated data files.
+All the assignments are organized under their individual directories containing rmarkdown (.Rmd) file(s) and the knitted pdf version along with all the required data files and generated output files.
 
-Midterm assignment can be found under midterm directory.
+Midterm assignment can be found under [midterm](https://github.com/rajatmnnit/compscix-415-2-assignments/tree/master/midterm) directory.
 
 
 ## RStudio and R Markdown (3 points)
 
 1. **Use markdown headers in your document to clearly separate each midterm question and add a table of contents to your document.**
 
-Done.
+Each section in this document starts with a ## Heading 2 style section title.
+
+You can use the table of contents on the first page to navigate to various sections directly.
+
+Wherever relevant, hyperlinks are clickable.
 \pagebreak
+
 
 ## The tidyverse packages (3 points)
 **By now you’ve used at least five different packages from the tidyverse for plotting, data munging, reshaping data, importing/exporting data, and using tibbles (the `tibble` package is used for this without you even realizing it’s there).**
@@ -127,9 +133,9 @@ glimpse(rail_trail_csv)
 
 There are a few features of this visualization which I disagree with.
 
-a. **Area** - I do not generally agree with bubble charts because they are area based representations and difficult to compare and interpret.
-b. **Dimensions** - It seems like the author used multiple dimensions - Age Group and Sex to represent data in the same graphic. It seems like a bad idea.
-c. **Totals** - The totals of percentages between "Yes" and "No" responses do not add up to 100%. In fact they are substantially lower than 100%. I believe there was another category in the survey form "Don't Know" or equivalent `NA`. If this response is not important, I would probably remove NAs before computing percentages.
+a. **Area based Visualization** - I do not generally agree with bubble charts because they are area based representations of values which makes them difficult to interpret and compare.
+b. **Multiple Dimensions on same axis** - It seems like the author represented multiple dimensions - Age Group and Sex on the same y-axis in the graphic. It seems confusing and definitely a bad idea.
+c. **Percentages don't add up** - The sum of percentages between "Yes" and "No" responses on each row do not add up to 100%. In fact they are substantially lower than 100%. I believe there was another category in the survey form - "Don't Know" or equivalent `NA`. If this response is not important, I would probably remove NAs before computing percentages.
 
 &nbsp;
 
@@ -168,7 +174,7 @@ ggplot(data = diamonds, aes(x = cut, y = carat, fill = color)) +
 table2
 ```
 
-No, this data is not tidy because observations for `country` and `year` variables are split over multiple rows for different values of `type` variable. A tidy data set should have one column per variable and one row for each observation. Here is the code to make it tidy:
+No, this data is not tidy because observations for `country` and `year` variables are split over multiple rows for different values of `type` variable. A tidy data should have one column per variable and one row for each observation. Here is the code to make it tidy:
 
 ```{r datamung_1}
 table2 %>% 
@@ -216,16 +222,11 @@ ggplot(data = diamonds, aes(x = cut, y = price)) +
 ## EDA (6 points)
 **Take a look at the `txhousing` data set that is included with the `ggplot2` package and answer these questions:**
 
-```{r eda_0}
-glimpse(txhousing)
-```
-
 1. **During what time period is this data from?**
 
 ```{r eda_1}
-# TODO: Be careful with the mutate below. 
-# It is working fine for this data set, but 
-# min/max may break due to variable lengths of months.
+# TODO: Be careful with the mutate below. It is working fine for this
+# dataset, but min/max may break due to months being 1 or 2 digit vals.
 txhousing %>%
   mutate(yr_mon = paste0(year, "-", month)) %>%
   summarize(
@@ -242,9 +243,8 @@ The data in `txhousing` data set is from January 2000 to July 2015.
 
 ```{r eda_2}
 txhousing %>% 
-  select(city) %>%
-  unique() %>%
-  count()
+  select(city) %>% 
+  n_distinct()
 ```
 There are 46 cities represented in `txhousing` data set.
 
@@ -257,11 +257,13 @@ txhousing %>%
   arrange(desc(sales))
 ```
 
-Houston in the month of July of 2015 had the highest number of sales.
+Houston, in the month of July of 2015 had the highest number of sales.
 
 &nbsp;
 
 4. **What kind of relationship do you think exists between the number of listings and the number of sales? Check your assumption and show your work.**
+
+I think the number of listings should have a strong positive correlation with the number of sales. The more the listings, the more chances of making a sale. 
 
 ```{r eda_4, message=FALSE, warning=FALSE, fig.height=3.5}
 ggplot(data = txhousing, aes(x = listings, y = sales)) +
@@ -269,45 +271,48 @@ ggplot(data = txhousing, aes(x = listings, y = sales)) +
   geom_smooth()
 ```
 
-As shown in the scatter plot above, number of listings show a positive correlation with number of sales.
+The scatter plot above confirms my assumption.
 
 &nbsp;
 
 5. **What proportion of `sales` is missing for each city?**
 
-Here is a list of proporting of `sales` missing by each `city` sorted in descending order of missing proportion.
+Here is a list of proportion of `sales` missing by each `city` sorted in descending order of missing proportion.
 ```{r eda_5}
 txhousing %>%
   group_by(city) %>%
   summarize(prop_missing = mean(is.na(sales))) %>%
   arrange(desc(prop_missing))
 ```
-
-&nbsp;
+\pagebreak
 
 6. **Looking at only the cities and months with greater than 500 sales:**
 
 * **Are the distributions of the median sales price (column name `median`), when grouped by city, different? The same? Show your work.**
 
-```{r eda_6_a, message=FALSE, fig.height=6}
+```{r eda_6_a, message=FALSE, fig.height=4.5}
 txhousing %>%
   filter(sales > 500) %>%
-  ggplot(aes(x = median, color = city)) + 
-    geom_freqpoly(show.legend = FALSE) +
-    facet_wrap(~city, nrow = 4)
+  ggplot(aes(x = reorder(city, median, FUN = mean), y = median, fill = city)) + 
+  geom_boxplot(show.legend = FALSE) + 
+  xlab("City") + ylab("Median Sales Price") + 
+  coord_flip()
 ```
+
+The distribution of median sales prices certainly differs by city. Some cities like "Colin Country" have higher median sales price compared to others. The distribution around median varies a lot as well. For example, cities like "El Paso", "San Antonio", "Fort Bend" etc. have higher variance around median, whereas cities like "Corpus Christi" and "Arlington" have very less variance.
+
 &nbsp;
 
 * **Any cities that stand out that you’d want to investigate further?**
 
-```{r eda_6_b}
-```
+Yes. We should further investigate the data for the cities of "Dallas", "Colin County" and "Houston" because they seem to have too many outliers.
+
 &nbsp;
 
 * **Why might we want to filter out all cities and months with sales less than 500?**
 
-```{r eda_6_c}
-```
+We want to filter out all cities and months with sales less than 500 because having them all on our plot will make it unreadable. Also these observations will not be useful in the EDA as they represent the sparce sales and not the majority of sales.
+\pagebreak
     
     
 ## Git and Github (1.5 points)
