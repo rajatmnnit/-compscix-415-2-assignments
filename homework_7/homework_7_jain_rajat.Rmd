@@ -1,0 +1,227 @@
+---
+title: "COMPSCIX 415.2 Homework 7"
+author: "Rajat Jain"
+date: "July 19th, 2018"
+output:
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_packages, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+
+library(broom)
+```
+
+
+# Exercises
+
+
+## Exercise 1
+
+**Load the train.csv dataset into R. How many observations and columns are there?**
+
+```{r e1}
+train_data <- read_csv("train.csv")
+```
+
+There are **`r nrow(train_data)`** observations and **`r ncol(train_data)`** columns in `train.csv` data set.
+
+
+## Exercise 2
+
+**Normally at this point you would spend a few days on EDA, but for this homework we will do some very basic EDA and get right to fitting some linear regression models.**
+
+**Our target will be `SalePrice`.**
+
+* **Visualize the distribution of `SalePrice`.**
+
+Here is a plot of frequency distribuion of `SalePrice`.
+
+```{r e2_a, message=FALSE, fig.height=3.5}
+ggplot(data = train_data, aes(x = SalePrice)) +
+  geom_freqpoly() + theme_bw()
+```
+
+The distribution is skewed towards right. This means that most `SalePrice` are with-in $300K with some exceptions.
+\newline
+
+* **Visualize the covariation between `SalePrice` and `Neighborhood`.**
+
+```{r e2_b, fig.height=3.5}
+ggplot(data = train_data, aes(x = reorder(Neighborhood, SalePrice, FUN = median), y = SalePrice)) +
+  geom_boxplot() + xlab("Neighborhood") + 
+  coord_flip() + theme_bw()
+```
+
+The plot above shows that median `SalePrice` vary a bit by `Neighborhood`. However, the correlation doesn't seem to be a very strong one.
+\newline
+
+* **Visualize the covariation between `SalePrice` and `OverallQual`.**
+
+```{r e2_c, message=FALSE, fig.height=3.5}
+ggplot(data = train_data, aes(x = OverallQual, y = SalePrice)) +
+  geom_point(position = "jitter", color = "green", alpha = 0.4) + 
+  geom_smooth(color = "black") + theme_bw()
+```
+
+`SalePrice` show a strong positive covariation with `OverallQual`.
+
+
+## Exercise 3
+
+**Our target is called `SalePrice`. First, we can fit a simple regression model consisting of only the intercept (the average of `SalePrice`). Fit the model and then use the `broom` package to**
+
+Here is the code to fit a simple regression model consisting of only the intercept:
+
+```{r e3}
+model <- lm(formula = SalePrice ~ 1, data = train_data)
+```
+
+* **take a look at the coefficient,**
+
+```{r e3_a}
+tidy(model)
+```
+
+Coefficient (Intercept) is 180921.2.
+\newline
+
+* **compare the coefficient to the average value of `SalePrice`, and**
+
+```{r e3_b}
+mean(train_data$SalePrice)
+```
+
+Coefficient is equal to the average value of `SalePrice`.
+\newline
+
+* **take a look at the R-squared.**
+
+```{r e3_c}
+glance(model)
+```
+
+R-squared value is 0. It means that this model does not explain any variability in the data.
+\pagebreak
+
+
+## Exercise 4
+
+**Now fit a linear regression model using `GrLivArea`, `OverallQual`, and `Neighborhood` as the features. Don’t forget to look at  data_description.txt to understand what these variables mean. Ask yourself these questions before fitting the model:**
+
+* **What kind of relationship will these features have with our target?**
+
+These features should have a direct positive relationship with our target. 
+\newline
+
+* **Can the relationship be estimated linearly?**
+
+Yes. Although not sure about `Neighborhood`, as it is a categorical feature.
+\newline
+
+* **Are these good features, given the problem we are trying to solve?**
+
+Yes, it seems so based on the EDA above.
+
+&nbsp;\newline
+
+Here is the code to fit the multiple linear regression model:
+
+```{r e4_1}
+linear <- lm(formula = SalePrice ~ GrLivArea + OverallQual + Neighborhood, data = train_data)
+```
+
+**After fitting the model, output the coefficients and the R-squared using the `broom` package.**
+
+```{r e4_2}
+# Coefficients
+tidy(linear)
+
+# R-squared
+glance(linear)
+```
+\pagebreak
+
+**Answer these questions:**
+
+* **How would you interpret the coefficients on `GrLivArea` and `OverallQual`?**
+
+Controlling for all other features, if the `GrLivArea` increases by 1 unit, the `SalePrice` increases by $55.56 on average. Similarly, keeping all other features fixed, a unit increase in `OverallQual` increases the `SalePrice` on average by $20,951.42.
+\newline
+
+* **How would you interpret the coefficient on `NeighborhoodBrkSide`?**
+
+`SalePrice` in `NeighborhoodBrkSide` are on average $13,025.45 lower relative to those in `NeighborhoodBlmngtn` while controlling for all other features.
+\newline
+
+* **Are the features *significant*?**
+
+`GrLivArea` and `OverallQual` both have p-values < 0.05, so statistically speaking they are significant. However, of the variables generated from categorical `Neighborhood`, the following have p-value > 0.05 - `NeighborhoodBlueste`, `NeighborhoodBrkSide`, `NeighborhoodCollgCr`, `NeighborhoodCrawfor`, `NeighborhoodEdwards`, `NeighborhoodGilbert`, `NeighborhoodMeadowV`, `NeighborhoodMitchel`, `NeighborhoodNAmes`, `NeighborhoodNPkVill`, `NeighborhoodNWAmes`, `NeighborhoodSawyer`, `NeighborhoodSawyerW`, `NeighborhoodSomerst`. So we can say that `Neighborhood` is not statistically significant.
+\newline
+
+* **Are the features *practically significant*?**
+
+Yes, the features are practically significant. None of the intercept is close to 0 and it makes sense for the price to change with living area and rating of overall material and finishing of the house.
+\newline
+
+* **Is the model a good fit?**
+
+Our adjusted-R-squared value for this model is 0.78, which is pretty high. Hence we can say that the model is a good fit and a lot of variability in the data is explained by this model.
+\pagebreak
+
+## Exercise 6
+
+**One downside of the linear model is that it is sensitive to unusual values because the distance incorporates a squared term. Fit a linear model to the simulated data below (use `y` as the target and `x` as the feature), and look at the resulting coefficients and R-squared. Rerun it about 5-6 times to generate different simulated datasets. What do you notice about the model’s coefficient on `x` and the R-squared values?**
+
+```{r e6_q, eval=FALSE}
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2)
+)
+```
+
+```{r e6_1}
+N <- 10
+
+coeff <- rep(NA, N)
+r2rd <- rep(NA, N)
+
+for(i in 1:N) {
+  sim_data <- tibble(
+    x = rep(1:10, each = 3),
+    y = x * 1.5 + 6 + rt(length(x), df = 2)
+  )
+  
+  m <- lm(formula = y ~ x, data = sim_data)
+  td <- tidy(m)
+  coeff[i] <- td %>% filter(term == 'x') %>% select(estimate) %>% .[[1]]
+  
+  gl <- glance(m)
+  r2rd[i] <- gl %>% select(r.squared) %>% .[[1]]
+}
+
+results <- tibble(
+  coefficient.x = coeff,
+  r.squared = r2rd
+)
+
+results
+```
+
+Model's coefficient on `x` and the R-squared values vary greately with each iteration, although the values of `y` in simulation data is generated as a linear function of `x`. 
+
+But the random term being added to it generates some unusual values as shown in the plot below.
+
+```{r e6_2, fig.height=4}
+ggplot(sim_data, aes(x = x, y = y)) + 
+  geom_point(position = "jitter", color = "red", alpha = 0.6) +
+  stat_smooth(method = "lm", color = "black", se = FALSE) +
+  theme_bw()
+```
+
+The points which are far away from the fit line, have great impact on the slope.
