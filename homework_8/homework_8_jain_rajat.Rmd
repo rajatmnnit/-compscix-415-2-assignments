@@ -1,0 +1,85 @@
+---
+title: "COMPSCIX 415.2 Homework 8"
+author: "Rajat Jain"
+date: "July 25th, 2018"
+output:
+  html_document:
+    toc: yes
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load_packages, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+# For parsing JSON from API.
+library(jsonlite)
+# For Maps
+library(leaflet)
+```
+
+
+# Exercises
+
+This week there is only one exercise for you to complete.
+
+## Excercise 1
+
+Create an R function that takes as its input argument a city name and creates a slippy leaflet map as its output. The leaflet map should already be zoomed in onto the city that is input into the function and should contain markers for each of the bike station locations, and each marker should show the number of bikes when hovered over by the mouse cursor (see example below). Feel free to add your own flourishes to the map.
+
+On your final html document I want to see the code and **one** slippy map for any of the given cities. **Do not** attempt to put multiple slippy maps on your html file - it may break.
+
+Name your function `map_it`. To pull the data, you will use the `fromJSON` function (**set the `flatten` argument to `TRUE`**).
+
+```{r e1_q, eval=FALSE}
+### You can use this vector of city names to test your function
+cities <- c('Luxembourg', 'Dublin', 'Brisbane', 'Seville', 'Stockholm', 'Ljubljana')
+```
+
+
+## Solution 
+
+```{r e1_apikey, echo=FALSE}
+# API Key.
+key <- "63bb4ef279518de78db4f91c3fd29cd0ed0184ce"
+```
+
+### Function
+
+```{r e1_function}
+map_it <- function(city) {
+  # Get data from API for the input city.
+  url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=", city, 
+                "&apiKey=", key)
+  bike_data <- fromJSON(url, flatten = TRUE)
+  
+  # Convert available bikes to character.
+  bike_data <- bike_data %>% 
+    mutate(label = paste0("Station Name : ", name, 
+                          ", # Bikes Available: ", available_bikes))
+  
+  # Create a map with 
+  leaflet() %>%
+    addTiles() %>%
+    # Set view to the average lat long for the city and zoomed in.
+    setView(lng  = mean(bike_data$position.lng, na.rm = TRUE), 
+            lat  = mean(bike_data$position.lat, na.rm = TRUE),
+            zoom = 13) %>%
+    # Add labels for each Bike station.
+    addMarkers(lng   = ~position.lng, 
+               lat   = ~position.lat, 
+               label = ~label,
+               data  = bike_data)
+}
+```
+
+
+### In Action
+
+```{r e1_test, fig.align='center', fig.width=9}
+# Test for city - Ljubljana.
+map_it("Ljubljana")
+```
