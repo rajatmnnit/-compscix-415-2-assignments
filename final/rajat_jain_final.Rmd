@@ -1,7 +1,7 @@
 ---
 title: "COMPSCIX 415.2 Homework 9/Final"
 author: "Rajat Jain"
-date: "Aug 4th, 2018"
+date: "Aug 5th, 2018"
 output:
   pdf_document:
     toc: yes
@@ -83,6 +83,7 @@ samp_stats <- function(samp_size, samp_rate) {
 * **Runs the above function 1000 times, with `samp_size = 50` and `samp_rate = 1/10000`**
 * **Saves all of the sample means in a vector called `sample_means`, and all of the sample standard deviations in a vector called `sample_sds`**
 
+Here is the desired code:
 ```{r e_1_s2}
 # No. of iterations.
 N <- 1000
@@ -130,7 +131,7 @@ paste("Theoretical Standard Error is", round(10000 / sqrt(n), 2))
 
 ```{r e_1_s1_d}
 paste("Mean of sample Standard Deviations is", round(mean(sample_sds), 2), 
-      "and Emperical Standard Error is", round(mean(sample_sds) / sqrt(n), 2))
+      "and Emperical Standard Error is", round(mean(sample_sds) / sqrt(n), 2)) # Using sample SD.
 ```
 
 
@@ -204,7 +205,7 @@ For this exercise we will return to the House Prices prediction dataset that we 
 
 Here is the code to load data and fit a linear regression model:
 ```{r e_2_s1, message=FALSE}
-train_data <- read_csv('train.csv')
+train_data <- read_csv('train.csv') # Load csv data file.
 model <- lm(formula = SalePrice ~ LotArea + OverallQual + ExterQual, data = train_data)
 ```
 
@@ -214,7 +215,6 @@ model <- lm(formula = SalePrice ~ LotArea + OverallQual + ExterQual, data = trai
 
 ```{r e_2_s2_a}
 tidy(model)
-
 glance(model)
 ```
 &nbsp;
@@ -226,14 +226,15 @@ Controlling for all other features, if the `LotArea` increases by 1 unit, the `S
 
 * **Interpret the coefficient on `ExterQualGd`**
 
-`SalePrice` for houses with `ExterQualGd`(Good exterior material quality) are on average $71,529.49 lower relative to the houses with `ExterQualEx`(Excellent) while controlling for all other features.
+`SalePrice` for houses with `ExterQualGd`(Good exterior material quality) are on average $71,529.49 lower than the houses with `ExterQualEx`(Excellent) while controlling for all other features.
 *PS: There are no entries in training data with `ExterQual` value `Po`(Poor).*
 \newline
 
 * **Compare this model to the model we fit in HW 7 with `GrLivArea`, `OverallQual`, `Neighborhood`. Which is the better fitting model?**
 
-This model has the adjusted-R-squared value of 0.69 which is lower than the adjusted-R-squared value of 0.78 achieved with the model we fit in HW 7 with `GrLivArea`, `OverallQual`, `Neighborhood`. It means that the current model explains less variability in the data as compared to the one built in HW 7. Hence, the model from HW 7 was a better fitting model.
+This model has the adjusted-R-squared value of 0.69 which is lower than the adjusted-R-squared value of 0.78 achieved with the model we fit in HW 7 with `GrLivArea`, `OverallQual`, `Neighborhood`. It means that the current model explains variability in data lesser when compared to the model built in HW 7. Hence, the model from HW 7 was a better fitting model.
 \pagebreak
+
 
 ## Exercise 3 - AB Testing (5 points)
 
@@ -262,7 +263,7 @@ ab_test_data %>%
 ```
 
 4.15% visitors converted on version A and 10% visitors converted on version B of the webpage.
-&nbsp;
+\newline
 
 b. **Perform the AB test in R. What is the p-value for the AB test (hypothesis test of proportions)?**
 
